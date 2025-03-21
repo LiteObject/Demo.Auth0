@@ -17,6 +17,9 @@ namespace EmployeeManagement.API
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            // Add health checks
+            builder.Services.AddHealthChecks();
+
             // Configure logging
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
@@ -70,7 +73,10 @@ namespace EmployeeManagement.API
             // Ensure the authentication middleware is used
             app.UseAuthentication();            
             app.UseAuthorization();
-            
+
+            // Map health check endpoint
+            app.MapHealthChecks("/health");
+
             app.MapControllers();
 
             app.Run();
