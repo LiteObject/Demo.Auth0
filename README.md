@@ -22,7 +22,6 @@
 | **When to Use**            | For web, mobile, or backend apps    | To protect and expose APIs       |
 
 
-
 ### Scope vs Permission
 There is a subtle but important difference between **scopes** and 
 **permissions** in Auth0, although they are closely related and often 
