@@ -1,4 +1,4 @@
-﻿# A .NET Web API demo showcasing Auth0 authentication and authorization
+﻿# .NET Web API demo showcasing Auth0 authentication and authorization
 
 ### Auth0: Applications vs. APIs
 
