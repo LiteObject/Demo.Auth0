@@ -1,3 +1,4 @@
+using EmployeeManagement.API.Authorization;
 using EmployeeManagement.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ public class EmployeesController(ILogger<EmployeesController> logger) : Controll
 
     private readonly ILogger<EmployeesController> _logger = logger;
 
-    [Authorize(Policy = "read:employees")]
+    [Authorize(Policy = AuthorizationPolicies.Admin)]
     [HttpGet]
     public IActionResult Get()
     {
@@ -25,20 +26,30 @@ public class EmployeesController(ILogger<EmployeesController> logger) : Controll
         return Ok(repo);
     }
 
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.ReadEmployees)]
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
         _logger.LogInformation("Getting employee with id {id}", id);
-        var employee = repo.FirstOrDefault(e => e.Id == id);
+
+        var userEmail = User.FindFirst("localhost/email")?.Value;
+        var userRole = User.FindFirst("localhost/roles")?.Value ?? string.Empty;
+
+        // Imperative/In-line Authorization: Ensures that a user can only access their own employee record,
+        // unless they have an admin role.However, this logic is not reusable.
+        var employee = repo.FirstOrDefault(e => e.Id == id 
+            && (e.Email == userEmail 
+                || userRole.Equals("admin", StringComparison.OrdinalIgnoreCase)));
+
         if (employee == null)
         {
             return NotFound();
         }
+
         return Ok(employee);
     }
 
-    [Authorize(Policy = "write:employee")]
+    [Authorize(Policy = AuthorizationPolicies.WriteEmployee)]
     [HttpPost]
     public IActionResult Post(Employee employee)
     {
