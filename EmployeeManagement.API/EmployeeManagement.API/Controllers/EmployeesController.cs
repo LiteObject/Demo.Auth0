@@ -13,7 +13,8 @@ public class EmployeesController(ILogger<EmployeesController> logger) : Controll
         [
             new Employee { Id = 1, Name = "Alice Johnson", Department = "Engineering", Email = "alice.johnson@example.com", Role = "User" },
             new Employee { Id = 2, Name = "Bob Brown", Department = "Project Management", Email = "bob.brown@example.com", Role = "User" },
-            new Employee { Id = 3, Name = "Charlie Smith", Department = "Data Analysis", Email = "charlie.smith@example.com", Role = "User" }
+            new Employee { Id = 3, Name = "Charlie Smith", Department = "Data Analysis", Email = "charlie.smith@example.com", Role = "User" },
+            new Employee { Id = 4, Name = "Test User", Department = "Information Technology", Email = "user@test.com", Role = "User" }
         ];
 
     private readonly ILogger<EmployeesController> _logger = logger;
