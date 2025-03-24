@@ -1,4 +1,5 @@
 
+using EmployeeManagement.API.Extensions;
 using EmployeeManagement.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -44,25 +45,8 @@ namespace EmployeeManagement.API
                 };
             });
 
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("read:employees", policy =>
-                    policy.RequireAssertion(context =>
-                        context.User.HasClaim(c =>
-                            c.Type == "scope" && c.Value.Split(' ').Contains("read:employees"))));
-
-                options.AddPolicy("write:employee", policy =>
-                    policy.RequireAssertion(context =>
-                        context.User.HasClaim(c =>
-                            c.Type == "scope" && c.Value.Split(' ').Contains("write:employee"))));
-
-                options.AddPolicy("admin", policy =>
-                    policy.RequireAssertion(context =>
-                    {
-                        var roles = context.User.FindAll("localhost/roles").Select(c => c.Value);
-                        return roles.Any(r => r == "Admin");
-                    }));
-            });
+            // Use the custom extension to add authorization policies
+            builder.Services.AddCustomAuthorizationPolicies();
 
             var app = builder.Build();
 
