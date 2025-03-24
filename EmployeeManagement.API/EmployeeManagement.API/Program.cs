@@ -55,6 +55,13 @@ namespace EmployeeManagement.API
                     policy.RequireAssertion(context =>
                         context.User.HasClaim(c =>
                             c.Type == "scope" && c.Value.Split(' ').Contains("write:employee"))));
+
+                options.AddPolicy("admin", policy =>
+                    policy.RequireAssertion(context =>
+                    {
+                        var roles = context.User.FindAll("localhost/roles").Select(c => c.Value);
+                        return roles.Any(r => r == "Admin");
+                    }));
             });
 
             var app = builder.Build();
